@@ -8,10 +8,12 @@ on:
       - main
     paths:
       - "supabase/functions/roc-board-access/**"
+      - ".github/workflows/deploy-supabase-function.yml"
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -19,10 +21,13 @@ jobs:
       - name: Install Supabase CLI
         uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 2.39.2
 
       - name: Deploy Edge Function
-        run: supabase functions deploy roc-board-access --project-ref "$SUPABASE_PROJECT_REF" --no-verify-jwt
+        run: |
+          supabase functions deploy roc-board-access \
+            --project-ref "$SUPABASE_PROJECT_REF" \
+            --no-verify-jwt
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
